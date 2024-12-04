@@ -13,7 +13,7 @@ namespace {
   } 
 };
 
-Player::Player(): id_(0), score_(0), last_move_(0), board_size_(0), moves_() {}
+Player::Player(): moves_(), id_(0), score_(0), last_move_(0), board_size_(0) {}
 
 void Player::init(unsigned int id, unsigned int board_size) {
   id_ = id;
