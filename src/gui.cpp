@@ -7,11 +7,11 @@ void GUI::clear_screen() {
 }
 
 void GUI::print_border() {
-  std::stringstream border;
-  border << "|";
-  border << std::string(BOARD_WIDTH - 2, '=');
-  border << "|";
-  std::cout << border.str() << std::endl;
+  std::string border = "";
+  border += "|";
+  border += std::string(INNER_WIDTH, '=');
+  border += "|";
+  std::cout << border << std::endl;
 }
 
 void GUI::print_item (std::string item, bool right_justify) {
