@@ -1,36 +1,34 @@
 #include "gui.h"
 
 void GUI::clear_screen() {
-  // Mac/Linux
 #ifndef DEBUG
-  system("clear");
+  system("clear"); // Mac & Linux
 #endif
 }
 
 void GUI::print_border() {
-  char border[BOARD_WIDTH + 1] = "|";
-  for (int i = 1; i < BOARD_WIDTH - 1; ++i) {
-    border[i] = '=';
-  }
-  border[BOARD_WIDTH - 1] = '|';
-  printf("%s\n", border);
+  std::stringstream border;
+  border << "|";
+  border << std::string(BOARD_WIDTH - 2, '=');
+  border << "|";
+  std::cout << border.str() << std::endl;
 }
 
-void GUI::print_item (const char* item, bool right_justify) {
+void GUI::print_item (std::string item, bool right_justify) {
   if (right_justify) {
-    printf("| %*s |\n", INNER_WIDTH - INNER_PAD, item);
+    printf("| %*s |\n", INNER_WIDTH - INNER_PAD, item.c_str());
   } else {
-    printf("| %-*s |\n", INNER_WIDTH - INNER_PAD, item);
+    printf("| %-*s |\n", INNER_WIDTH - INNER_PAD, item.c_str());
   }
 }
 
-void GUI::print_header(const char* title, bool clear) {
+void GUI::print_header(std::string title, bool clear) {
   if (clear) {
     clear_screen();
   }
   print_border();
-  int rightPad = (INNER_WIDTH - strlen(title)) / 2;
-  int leftPad = INNER_WIDTH - rightPad - strlen(title);
-  printf("|%*s%s%*s|\n", leftPad, "", title, rightPad, "");
+  size_t rightPad = (INNER_WIDTH - title.size()) / 2;
+  size_t leftPad = INNER_WIDTH - rightPad - title.size();
+  printf("|%*s%s%*s|\n", leftPad, "", title.c_str(), rightPad, "");
   print_border();
 }

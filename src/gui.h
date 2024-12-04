@@ -4,15 +4,19 @@
  * Prints a border for the menu, items, and headers
  */
 #include <iostream>
+#include <string>
+#include <sstream>
 
 class GUI {
 public:
-  static constexpr int BOARD_WIDTH = 35;
-  static constexpr int INNER_PAD = 2;
-  static constexpr int INNER_WIDTH = BOARD_WIDTH - INNER_PAD;
+  static constexpr size_t BOARD_WIDTH = 35;
+  static constexpr size_t INNER_PAD = 2;
+  static constexpr size_t INNER_WIDTH = BOARD_WIDTH - INNER_PAD;
 
   /**
    * @brief Clear the console
+   * 
+   * Will do nothing if DEBUG flag is defined
    */
   static void clear_screen();
 
@@ -35,7 +39,7 @@ public:
    * @param item The string to print
    * @param left_justify Whether to left justify the text
    */
-  static void print_item(const char* item, bool right_justify = false);
+  static void print_item(std::string item, bool right_justify = false);
 
   /**
    * @brief Print a header with the centered title
@@ -47,5 +51,5 @@ public:
    * @param title The title to print
    * @param clear Whether to clear the screen before printing
    */
-  static void print_header(const char* title, bool clear = true);
+  static void print_header(std::string title, bool clear = true);
 };
