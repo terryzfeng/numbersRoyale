@@ -3,7 +3,7 @@
 #include <random>
 #include "cpu.h"
 
-CPU::CPU() : Player(true) {
+CPU::CPU() : Player() {
   std::srand((unsigned) time(0));
 }
 

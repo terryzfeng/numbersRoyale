@@ -17,8 +17,17 @@ public:
    * 
    * @return std::string CPU name
    */
-  std::string name () const override {
+  std::string name() const override {
     return "CPU";
+  }
+
+  /**
+   * @brief Return if the player is a CPU
+   * 
+   * @return true for CPU player
+   */
+  bool is_cpu() const override {
+    return true;
   }
 
   /**
