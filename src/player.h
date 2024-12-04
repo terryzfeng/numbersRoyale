@@ -6,6 +6,7 @@
  */
 #pragma once
 #include <unordered_set>
+#include <array>
 #include <string>
 
 
@@ -16,15 +17,12 @@ protected:
   unsigned int score_;
   unsigned int last_move_;
   unsigned int board_size_;
-  bool is_cpu_;
 
 public:
   /**
    * @brief Construct a new Player 
-   * 
-   * @param is_cpu whether the player is a CPU player
    */
-  Player(bool is_cpu = false);
+  Player();
   virtual ~Player() = default;
 
   /**
@@ -99,7 +97,7 @@ public:
    * 
    * @return the player's moves set
    */
-  std::unordered_set<unsigned int> get_moves() {
+  const std::unordered_set<unsigned int>& get_moves() {
     return moves_;
   }
 
@@ -122,7 +120,7 @@ public:
    * 
    * @return true if player is a CPU, false otherwise
    */
-  bool is_cpu() const {
-    return is_cpu_;
+  virtual bool is_cpu() const {
+    return false;
   }
 };

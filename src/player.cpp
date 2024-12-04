@@ -1,22 +1,19 @@
 #include "player.h"
 #include <iostream>
 
-// Helper function
-/**
- * @brief Trim trailing whitespace from a string
- * 
- * @param s string to trim
- */
-void rtrim(std::string& s) {
-  s.erase(s.find_last_not_of(" \n\r\t") + 1);
-} 
+namespace {
+  // Helper function
+  /**
+   * @brief Trim trailing whitespace from a string
+   * 
+   * @param s string to trim
+   */
+  static void rtrim(std::string& s) {
+    s.erase(s.find_last_not_of(" \n\r\t") + 1);
+  } 
+};
 
-Player::Player(bool is_cpu): is_cpu_(is_cpu) {
-  id_ = 0;
-  score_ = 0;
-  last_move_ = 0;
-  board_size_ = 0;
-}
+Player::Player(): id_(0), score_(0), last_move_(0), board_size_(0) {}
 
 void Player::init(unsigned int id, unsigned int board_size) {
   id_ = id;
