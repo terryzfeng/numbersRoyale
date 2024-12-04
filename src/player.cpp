@@ -13,7 +13,7 @@ namespace {
   } 
 };
 
-Player::Player(): id_(0), score_(0), last_move_(0), board_size_(0) {}
+Player::Player(): id_(0), score_(0), last_move_(0), board_size_(0), moves_() {}
 
 void Player::init(unsigned int id, unsigned int board_size) {
   id_ = id;
@@ -40,15 +40,15 @@ unsigned int Player::move(unsigned int number) {
 }
 
 std::string Player::get_moves_string() {
-  std::vector<bool> moves(board_size_);
+  std::vector<bool> move_status(board_size_);
   std::string result = "";
   // Convert to boolean vector
   for (unsigned int number : moves_) {
-    moves[number - 1] = true;
+    move_status[number - 1] = true;
   }
   // Build moves string
-  for (int i = 0; i < board_size_; ++i) {
-    if (moves[i]) {
+  for (unsigned int i = 0; i < board_size_; ++i) {
+    if (move_status[i]) {
       result += std::to_string(i + 1);
     } else {
       result += "_";
