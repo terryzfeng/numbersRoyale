@@ -116,9 +116,11 @@ public:
   }
 
   /**
-   * @brief Get if player is a CPU
-   * 
-   * @return true if player is a CPU, false otherwise
+   * @brief Return whether Player is a CPU
+   *
+   * CPU class should override and return true
+   *
+   * @return false Player class is not a CPU
    */
   virtual bool is_cpu() const {
     return false;
