@@ -97,7 +97,7 @@ public:
    * 
    * @return the player's moves set
    */
-  const std::unordered_set<unsigned int>& get_moves() {
+  const std::unordered_set<unsigned int>& get_moves() const {
     return moves_;
   }
 
