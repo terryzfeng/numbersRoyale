@@ -4,6 +4,7 @@
  */
 #include <vector>
 #include <string>
+#include <memory>
 #include "player.h"
 #include "gui.h"
 
@@ -11,32 +12,32 @@
 class Board
 {
 private:
-  std::vector<Player*> players_;
-  GUI* gui_;
+  std::vector<std::unique_ptr<Player>> players_;
   unsigned int num_humans_;
   unsigned int board_size_;
 
 public:
   // Globals
-  static const int DEFAULT_BOARD_SIZE = 9;
+  static constexpr size_t DEFAULT_BOARD_SIZE = 9;
+  static constexpr int CONTINUE_GAME = -1;
+  static constexpr int TIE_GAME = 0;
 
   // Comparator functions
   // Sort by descending score
-  static bool score_cmp(Player* a, Player* b) {
+  static bool score_cmp(const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
     return a->get_score() > b->get_score();
   }
   // Sort by last move, descending
-  static bool move_cmp(Player* a, Player* b) {
+  static bool move_cmp(const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
     return a->get_last_move() > b->get_last_move();
   }
 
   /**
    * @brief Construct a new Board object
    * 
-   * @param gui GUI object to handle display
    * @param board_size size of board
    */
-  Board(GUI *gui = nullptr, int board_size = DEFAULT_BOARD_SIZE);
+  Board(size_t board_size = DEFAULT_BOARD_SIZE);
 
   /**
    * @brief Destruct the Board object
@@ -48,11 +49,11 @@ public:
   /**
    * @brief Initialize players and board state
    * 
-   * If board_size is 0, the board will keep the current size
+   * If new_board_size is 0, the board will keep the current size
    * 
-   * @param board_size to reset to
+   * @param new_board_size to reset to
    */
-  void init(unsigned int board_size = 0);
+  void init(size_t new_board_size = 0);
 
   /**
    * @brief Remove all players from the board
@@ -62,31 +63,33 @@ public:
   /**
    * @brief (debug) Print the board state and all player's moves
    */
-  void print_board();
+  void print_board() const;
 
   /**
    * @brief Print scoreboard for all players
    */
-  void print_scores();
+  void print_scores() const;
 
   /**
    * @brief Print round results
    */
-  void print_round_result();
+  void print_round_result() const;
 
   /**
    * @brief Print the moves of a specific player id
    * 
+   * Nothing will be printed if the player id is invalid
+   * 
    * @param player_id the id of the player to print moves for
    */
-  void print_player_moves(unsigned int player_id);
+  void print_player_moves(unsigned int player_id) const;
 
   /**
    * @brief Get the board players
    * 
    * @return Players vector
    */
-  std::vector<Player*>& players() {
+  const std::vector<std::unique_ptr<Player>>& players() const {
     return players_;
   }
 
@@ -118,9 +121,9 @@ public:
   /**
    * @brief Check if game over and return winner id
    * 
-   * @return int id of the winner or 0 if a tie, -1 if game is not over
+   * @return int id of the winner or TIE_GAME if a tie, CONTIUE_GAME if game is not over
    */
-  int check_game_winner();
+  int check_game_winner() const;
 
   /**
    * @brief Return player id with highest move
