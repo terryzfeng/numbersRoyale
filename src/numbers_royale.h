@@ -36,7 +36,7 @@ public:
    * @param option int for a BoardSizeOption enum
    * @return unsigned int board size
    */
-  static constexpr unsigned int board_option_to_size(int option) {
+  static constexpr unsigned int board_option_to_size(unsigned int option) {
     return (option * 2) + 3; // magic number teehee
   }
 

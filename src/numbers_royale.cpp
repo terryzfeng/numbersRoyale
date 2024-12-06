@@ -2,37 +2,39 @@
 #include "cpu.h"
 
 
-// Helper functions
-/**
- * @brief Wait for user to press enter
- * 
- * @param message Message to display
- */
-void wait_for_enter(const char* message = "Press <enter> to continue... ") {
-  printf("%s", message);
-  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
+namespace {
+  // Helper functions
+  /**
+   * @brief Wait for user to press enter
+   * 
+   * @param message Message to display
+   */
+  void wait_for_enter(const char* message = "Press <enter> to continue... ") {
+    printf("%s", message);
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  }
 
-/**
- * @brief Get the validated input object
- * 
- * @param is_valid lambda function to validate input
- * @return int selected input after validation
- */
-int get_validated_input(const std::function<bool(int)>& is_valid) {
-  int input;
-  while (true) {
-    std::cin >> input;
-    if (std::cin.fail() || !is_valid(input)) {
-      std::cin.clear(); // clear the error flag
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard invalid input
-      std::cout << "Invalid input. Please try again: ";
-    } else {
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard any extra input
-      return input;
+  /**
+   * @brief Get the validated input object
+   * 
+   * @param is_valid lambda function to validate input
+   * @return int selected input after validation
+   */
+  int get_validated_input(const std::function<bool(int)>& is_valid) {
+    int input;
+    while (true) {
+      std::cin >> input;
+      if (std::cin.fail() || !is_valid(input)) {
+        std::cin.clear(); // clear the error flag
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard invalid input
+        std::cout << "Invalid input. Please try again: ";
+      } else {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard any extra input
+        return input;
+      }
     }
   }
-}
+};
 
 
 // Numbers Royale Class
@@ -137,7 +139,7 @@ void NumbersRoyale::select_board_size() {
   });
 
   if (option != BoardSizeOption::RETURN_TO_MAIN_MENU_2) {
-    board_.init(board_option_to_size(option));
+    board_.init(board_option_to_size(static_cast<unsigned int>(option)));
     play_game();
   } else {
     board_.reset();
