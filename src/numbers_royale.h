@@ -8,7 +8,6 @@
 
 class NumbersRoyale {
 public:
-  GUI *gui_;
   Board board_;
 
   enum MainMenuOption {
@@ -41,7 +40,7 @@ public:
     return (option * 2) + 3; // magic number teehee
   }
 
-  NumbersRoyale(GUI *gui);
+  NumbersRoyale();
 
   void main_menu();
   void how_to_play();

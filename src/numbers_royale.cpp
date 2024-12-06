@@ -36,17 +36,17 @@ int get_validated_input(const std::function<bool(int)>& is_valid) {
 
 
 // Numbers Royale Class
-NumbersRoyale::NumbersRoyale(GUI *gui): gui_(gui), board_(gui) {
-  gui_->clear_screen();
+NumbersRoyale::NumbersRoyale(): board_() {
+  GUI::clear_screen();
 }
 
 void NumbersRoyale::main_menu() {
   while (true) {
-    gui_->print_header("NUMBERS ROYALE");
-    gui_->print_item("1. Play Game");
-    gui_->print_item("2. How to Play");
-    gui_->print_item("3. Quit");
-    gui_->print_border();
+    GUI::print_header("NUMBERS ROYALE");
+    GUI::print_item("1. Play Game");
+    GUI::print_item("2. How to Play");
+    GUI::print_item("3. Quit");
+    GUI::print_border();
     printf("Select option: ");
     int option = get_validated_input([](int input) { 
       return input >= MainMenuOption::PLAY_GAME && input <= MainMenuOption::QUIT; 
@@ -70,7 +70,7 @@ void NumbersRoyale::main_menu() {
 
 void NumbersRoyale::how_to_play() {
   // TODO: Implement line wrapping for gui.h
-  gui_->clear_screen();
+  GUI::clear_screen();
   printf("|=================================|\n");
   printf("|           HOW TO PLAY           |\n");
   printf("|=================================|\n");
@@ -92,11 +92,11 @@ void NumbersRoyale::how_to_play() {
 }
 
 void NumbersRoyale::play_mode() {
-  gui_->print_header("SELECT MODE");
-  gui_->print_item("1. Player vs Player");
-  gui_->print_item("2. Player vs CPU");
-  gui_->print_item("3. Return to Main Menu");
-  gui_->print_border();
+  GUI::print_header("SELECT MODE");
+  GUI::print_item("1. Player vs Player");
+  GUI::print_item("2. Player vs CPU");
+  GUI::print_item("3. Return to Main Menu");
+  GUI::print_border();
   printf("Select option: ");
   int option = get_validated_input([](int input) { 
     return input >= PlayModeOption::PLAYER_VS_PLAYER && 
@@ -124,12 +124,12 @@ void NumbersRoyale::play_mode() {
 }
 
 void NumbersRoyale::select_board_size() {
-  gui_->print_header("SELECT BOARD SIZE");
-  gui_->print_item("1. 5");
-  gui_->print_item("2. 7");
-  gui_->print_item("3. 9");
-  gui_->print_item("4. Return to Main Menu");
-  gui_->print_border();
+  GUI::print_header("SELECT BOARD SIZE");
+  GUI::print_item("1. 5");
+  GUI::print_item("2. 7");
+  GUI::print_item("3. 9");
+  GUI::print_item("4. Return to Main Menu");
+  GUI::print_border();
   printf("Select option: ");
   int option = get_validated_input([](int input) { 
     return input >= BoardSizeOption::SMALL && 
@@ -156,7 +156,7 @@ void NumbersRoyale::play_game() {
       } else {
         // Player
         if (board_.num_humans() > 1) {
-          gui_->print_header("NUMBERS ROYALE");
+          GUI::print_header("NUMBERS ROYALE");
           printf("Pass the device to %s\n", player->name().c_str());
           wait_for_enter();
         }

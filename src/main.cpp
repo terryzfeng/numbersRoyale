@@ -1,8 +1,7 @@
 #include "numbers_royale.h"
 
 int main() {
-  GUI gui;
-  NumbersRoyale game(&gui);
+  NumbersRoyale game();
 
   // Enter game loop
   game.main_menu();
