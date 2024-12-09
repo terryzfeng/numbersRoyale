@@ -1,6 +1,4 @@
 #include <iostream>
-#include <vector>
-#include <string>
 #include "board.h"
 #include "cpu.h"
 
@@ -12,7 +10,7 @@ void Board::init(size_t new_board_size) {
   if (new_board_size > 0) {
     board_size_ = new_board_size;
   }
-  for (unsigned int i = 0; i < num_players(); ++i) {
+  for (unsigned int i = 0; i < get_num_players(); ++i) {
     // Player ids are 1-indexed
     players_[i]->init(i + 1, board_size_);
   }
@@ -26,7 +24,7 @@ void Board::reset() {
 void Board::print_board() {
   GUI::print_header("NUMBERS ROYALE");
   // Print players in reverse, so player 1 is on the bottom
-  for (int i = num_players() - 1; i >= 0; --i) {
+  for (int i = get_num_players() - 1; i >= 0; --i) {
     std::string playerText = players_[i]->name() + ": " +
         std::to_string(players_[i]->get_score()) + " points";
     GUI::print_item(playerText.c_str());
@@ -37,7 +35,7 @@ void Board::print_board() {
 }
 
 void Board::print_scores() {
-  int winner_id = check_game_winner();
+  unsigned int winner_id = check_game_winner();
   switch (winner_id) {
     case TIE_GAME:
       GUI::print_header("TIE GAME!");
@@ -54,7 +52,7 @@ void Board::print_scores() {
   std::vector<std::unique_ptr<Player>> sorted_players = players_;
   std::sort(sorted_players.begin(), sorted_players.end(), score_cmp);
 
-  for (int i = 0; i < num_players(); ++i) {
+  for (int i = 0; i < get_num_players(); ++i) {
     std::string player_score_text = sorted_players[i]->name() + ": " +
         std::to_string(sorted_players[i]->get_score()) + " points";
     GUI::print_item(player_score_text.c_str());
@@ -63,7 +61,7 @@ void Board::print_scores() {
 }
 
 void Board::print_round_result() {
-  int winner_id = check_round_winner(); 
+  unsigned int winner_id = check_round_winner(); 
 
   // If game is over, print final score and exit
   if (check_game_winner() != CONTINUE_GAME) {
@@ -82,7 +80,7 @@ void Board::print_round_result() {
   std::vector<std::unique_ptr<Player>> sorted_players = players_;
   std::sort(sorted_players.begin(), sorted_players.end(), move_cmp);
 
-  for (int i = 0; i < num_players(); ++i) {
+  for (int i = 0; i < get_num_players(); ++i) {
     std::string player_move_text = sorted_players[i]->name() + " move: " +
         std::to_string(sorted_players[i]->get_last_move());
     GUI::print_item(player_move_text.c_str());
@@ -93,7 +91,7 @@ void Board::print_round_result() {
 }
 
 void Board::print_player_moves(unsigned int player_id) {
-  if (player_id > num_players()) {
+  if (played_id == 0 || player_id > get_num_players()) {
     return;
   }
   GUI::print_header("NUMBERS ROYALE");
@@ -114,11 +112,11 @@ void Board::add_player(bool is_cpu) {
 }
 
 int Board::check_game_winner() {
-  if (num_players() == 0) {
+  if (get_num_players() == 0) {
     return TIE_GAME;
   }
 
-  int toWin = board_size_ / num_players();
+  int toWin = board_size_ / get_num_players();
   unsigned int max_score = 0;
   unsigned int winner_id = 0;
   bool tie = false;
@@ -147,13 +145,13 @@ int Board::check_game_winner() {
   return CONTINUE_GAME;
 }
 
-int Board::check_round_winner() {
-  int winner_id = 0;
-  int biggest_move = 0;
+unsigned int Board::check_round_winner() {
+  unsigned int winner_id = 0;
+  unsigned int biggest_move = 0;
   bool tie = false;
 
-  for (int i = 0; i < num_players(); ++i) {
-    int current_move = players_[i]->get_last_move();
+  for (int i = 0; i < get_num_players(); ++i) {
+    unsigned int current_move = players_[i]->get_last_move();
     if (current_move > biggest_move) {
       biggest_move = current_move;
       winner_id = players_[i]->id();
@@ -163,6 +161,7 @@ int Board::check_round_winner() {
     }
   }
 
+  // After all moves are checked, check for a tie
   if (tie) {
     return 0;
   }

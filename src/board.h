@@ -98,7 +98,7 @@ public:
    * 
    * @return unsigned int number of players
    */
-  unsigned int num_players() const {
+  unsigned int get_num_players() const {
     return players_.size();
   }
 
@@ -107,7 +107,7 @@ public:
    * 
    * @return unsigned int number of humans
    */
-  unsigned int num_humans() const {
+  unsigned int get_num_humans() const {
     return num_humans_;
   }
 
@@ -129,8 +129,9 @@ public:
    * @brief Return player id with highest move
    * 
    * Will also increment the score of the winning player
+   * Note: For 2+ players, winning ties are not counted as a win
    * 
    * @return int player id of winner, 0 if tie
    */
-  int check_round_winner();
+  unsigned int check_round_winner();
 };
