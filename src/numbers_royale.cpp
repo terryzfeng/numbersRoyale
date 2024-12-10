@@ -135,10 +135,10 @@ void NumbersRoyale::select_board_size() {
   printf("Select option: ");
   int option = get_validated_input([](int input) { 
     return input >= BoardSizeOption::SMALL && 
-        input <= BoardSizeOption::RETURN_TO_MAIN_MENU_2;
+        input <= BoardSizeOption::RETURN_TO_MAIN_MENU;
   });
 
-  if (option != BoardSizeOption::RETURN_TO_MAIN_MENU_2) {
+  if (option != BoardSizeOption::RETURN_TO_MAIN_MENU) {
     board_.init(board_option_to_size(static_cast<unsigned int>(option)));
     play_game();
   } else {
