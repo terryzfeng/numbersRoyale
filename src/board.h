@@ -24,11 +24,11 @@ public:
 
   // Comparator functions
   // Sort by descending score
-  static bool score_cmp(const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
+  static bool score_cmp(const Player* a, const Player* b) {
     return a->get_score() > b->get_score();
   }
   // Sort by last move, descending
-  static bool move_cmp(const std::unique_ptr<Player>& a, const std::unique_ptr<Player>& b) {
+  static bool move_cmp(const Player* a, const Player* b) {
     return a->get_last_move() > b->get_last_move();
   }
 
@@ -73,7 +73,7 @@ public:
   /**
    * @brief Print round results
    */
-  void print_round_result() const;
+  void print_round_result();
 
   /**
    * @brief Print the moves of a specific player id
@@ -119,9 +119,9 @@ public:
   void add_player(bool is_cpu = false);
 
   /**
-   * @brief Check if game over and return winner id
+   * @brief Check if game over and return winner flag option or player id
    * 
-   * @return int id of the winner or TIE_GAME if a tie, CONTIUE_GAME if game is not over
+   * @return TIE_GAME if a tie, CONTIUE_GAME if game is not over, or winning player id
    */
   int check_game_winner() const;
 

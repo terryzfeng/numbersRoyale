@@ -21,7 +21,7 @@ void Board::reset() {
   num_humans_ = 0;
 }
 
-void Board::print_board() {
+void Board::print_board() const {
   GUI::print_header("NUMBERS ROYALE");
   // Print players in reverse, so player 1 is on the bottom
   for (int i = get_num_players() - 1; i >= 0; --i) {
@@ -34,8 +34,8 @@ void Board::print_board() {
   GUI::print_border();
 }
 
-void Board::print_scores() {
-  unsigned int winner_id = check_game_winner();
+void Board::print_scores() const {
+  int winner_id = check_game_winner();
   switch (winner_id) {
     case TIE_GAME:
       GUI::print_header("TIE GAME!");
@@ -49,12 +49,16 @@ void Board::print_scores() {
       break;
   }
   // Sort players by descending score
-  std::vector<std::unique_ptr<Player>> sorted_players = players_;
-  std::sort(sorted_players.begin(), sorted_players.end(), score_cmp);
+  std::vector<Player*> sorted_player_view;
+  for (const std::unique_ptr<Player>& player : players()) {
+      sorted_player_view.push_back(player.get()); // Add raw pointers to the view
+  }
+
+  std::sort(sorted_player_view.begin(), sorted_player_view.end(), score_cmp);
 
   for (int i = 0; i < get_num_players(); ++i) {
-    std::string player_score_text = sorted_players[i]->name() + ": " +
-        std::to_string(sorted_players[i]->get_score()) + " points";
+    std::string player_score_text = sorted_player_view[i]->name() + ": " +
+        std::to_string(sorted_player_view[i]->get_score()) + " points";
     GUI::print_item(player_score_text.c_str());
   }
   GUI::print_border();
@@ -77,12 +81,15 @@ void Board::print_round_result() {
   }
 
   // Sort players by last move, descending
-  std::vector<std::unique_ptr<Player>> sorted_players = players_;
-  std::sort(sorted_players.begin(), sorted_players.end(), move_cmp);
+  std::vector<Player*> sorted_players_view;
+  for (const std::unique_ptr<Player>& player : players_) {
+    sorted_players_view.push_back(player.get());
+  }
+  std::sort(sorted_players_view.begin(), sorted_players_view.end(), move_cmp);
 
   for (int i = 0; i < get_num_players(); ++i) {
-    std::string player_move_text = sorted_players[i]->name() + " move: " +
-        std::to_string(sorted_players[i]->get_last_move());
+    std::string player_move_text = sorted_players_view[i]->name() + " move: " +
+        std::to_string(sorted_players_view[i]->get_last_move());
     GUI::print_item(player_move_text.c_str());
   }
 
@@ -90,12 +97,12 @@ void Board::print_round_result() {
   print_scores();
 }
 
-void Board::print_player_moves(unsigned int player_id) {
-  if (played_id == 0 || player_id > get_num_players()) {
+void Board::print_player_moves(unsigned int player_id) const {
+  if (player_id == 0 || player_id > get_num_players()) {
     return;
   }
   GUI::print_header("NUMBERS ROYALE");
-  std::unique_ptr<Player>& player = players_[player_id - 1];
+  const std::unique_ptr<Player>& player = players_[player_id - 1];
   std::string player_move_text = player->name() + " moves:";
   GUI::print_item(player_move_text.c_str());
   GUI::print_item(player->get_moves_string().c_str(), true);
@@ -111,7 +118,7 @@ void Board::add_player(bool is_cpu) {
   }
 }
 
-int Board::check_game_winner() {
+int Board::check_game_winner() const {
   if (get_num_players() == 0) {
     return TIE_GAME;
   }
