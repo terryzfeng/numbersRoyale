@@ -135,10 +135,10 @@ void NumbersRoyale::select_board_size() {
   printf("Select option: ");
   int option = get_validated_input([](int input) { 
     return input >= BoardSizeOption::SMALL && 
-        input <= BoardSizeOption::RETURN_TO_MAIN_MENU;
+        input <= BoardSizeOption::GO_TO_MAIN_MENU;
   });
 
-  if (option != BoardSizeOption::RETURN_TO_MAIN_MENU) {
+  if (option != BoardSizeOption::GO_TO_MAIN_MENU) {
     board_.init(board_option_to_size(static_cast<unsigned int>(option)));
     play_game();
   } else {
@@ -148,7 +148,8 @@ void NumbersRoyale::select_board_size() {
 
 void NumbersRoyale::play_game() {
   while (board_.check_game_winner() == -1) {
-    for (Player* player : board_.players()) {
+    // iterate through players
+    for (const std::unique_ptr<Player>& player : board_.players()) {
       if (player->is_cpu()) {
         // CPU
         unsigned int cpu_move = player->move(0);
@@ -157,7 +158,7 @@ void NumbersRoyale::play_game() {
         }
       } else {
         // Player
-        if (board_.num_humans() > 1) {
+        if (board_.get_num_humans() > 1) {
           GUI::print_header("NUMBERS ROYALE");
           printf("Pass the device to %s\n", player->name().c_str());
           wait_for_enter();
@@ -170,7 +171,7 @@ void NumbersRoyale::play_game() {
 #endif
         printf("%s, select a number: ", player->name().c_str());
 
-        int player_move = get_validated_input([player](int input) { 
+        int player_move = get_validated_input([&player](int input) { 
           return player->is_valid_move(input); 
         });
         player->move(player_move);

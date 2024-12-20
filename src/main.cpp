@@ -1,7 +1,7 @@
 #include "numbers_royale.h"
 
 int main() {
-  NumbersRoyale game();
+  NumbersRoyale game;
 
   // Enter game loop
   game.main_menu();
