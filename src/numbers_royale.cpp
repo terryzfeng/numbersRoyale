@@ -50,9 +50,10 @@ void NumbersRoyale::main_menu() {
     GUI::print_item("3. Quit");
     GUI::print_border();
     printf("Select option: ");
-    int option = get_validated_input([](int input) { 
-      return input >= MainMenuOption::PLAY_GAME && input <= MainMenuOption::QUIT; 
-    });
+    MainMenuOption option = static_cast<MainMenuOption>(get_validated_input([](int input) { 
+      MainMenuOption option = static_cast<MainMenuOption>(input);
+      return option >= MainMenuOption::PLAY_GAME && option <= MainMenuOption::QUIT; 
+    }));
 
     switch (option) {
       case MainMenuOption::PLAY_GAME:
@@ -100,10 +101,12 @@ void NumbersRoyale::play_mode() {
   GUI::print_item("3. Return to Main Menu");
   GUI::print_border();
   printf("Select option: ");
-  int option = get_validated_input([](int input) { 
-    return input >= PlayModeOption::PLAYER_VS_PLAYER && 
-        input <= PlayModeOption::RETURN_TO_MAIN_MENU;
-  });
+
+  PlayModeOption option = static_cast<PlayModeOption>(get_validated_input([](int input) { 
+    PlayModeOption option = static_cast<PlayModeOption>(input);
+    return option >= PlayModeOption::PLAYER_VS_PLAYER && 
+        option <= PlayModeOption::RETURN_TO_MAIN_MENU;
+  }));
 
   // P1
   board_.add_player(false);
@@ -133,12 +136,13 @@ void NumbersRoyale::select_board_size() {
   GUI::print_item("4. Return to Main Menu");
   GUI::print_border();
   printf("Select option: ");
-  int option = get_validated_input([](int input) { 
-    return input >= BoardSizeOption::SMALL && 
-        input <= BoardSizeOption::GO_TO_MAIN_MENU;
-  });
+  BoardSizeOption option = static_cast<BoardSizeOption>(get_validated_input([](int input) { 
+    BoardSizeOption option = static_cast<BoardSizeOption>(input);
+    return option >= BoardSizeOption::SMALL && 
+        option <= BoardSizeOption::RETURN_TO_MAIN_MENU;
+  }));
 
-  if (option != BoardSizeOption::GO_TO_MAIN_MENU) {
+  if (option != BoardSizeOption::RETURN_TO_MAIN_MENU) {
     board_.init(board_option_to_size(static_cast<unsigned int>(option)));
     play_game();
   } else {

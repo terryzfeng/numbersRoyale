@@ -10,23 +10,23 @@ class NumbersRoyale {
 public:
   Board board_;
 
-  enum MainMenuOption {
+  enum class MainMenuOption : int {
     PLAY_GAME = 1,
     HOW_TO_PLAY,
     QUIT
   };
 
-  enum PlayModeOption {
+  enum class PlayModeOption : int {
     PLAYER_VS_PLAYER = 1,
     PLAYER_VS_CPU,
     RETURN_TO_MAIN_MENU
   };
 
-  enum BoardSizeOption : int {
+  enum class BoardSizeOption : int {
     SMALL = 1,
     MEDIUM,
     LARGE,
-    GO_TO_MAIN_MENU // because enum classes are dumb
+    RETURN_TO_MAIN_MENU 
   };
 
   /**
