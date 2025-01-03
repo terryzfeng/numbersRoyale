@@ -16,9 +16,9 @@ void GUI::print_border() {
 
 void GUI::print_item (std::string item, bool right_justify) {
   if (right_justify) {
-    printf("| %*s |\n", INNER_WIDTH - INNER_PAD, item.c_str());
+    printf("| %*s |\n", static_cast<int>(INNER_WIDTH - INNER_PAD), item.c_str());
   } else {
-    printf("| %-*s |\n", INNER_WIDTH - INNER_PAD, item.c_str());
+    printf("| %-*s |\n", static_cast<int>(INNER_WIDTH - INNER_PAD), item.c_str());
   }
 }
 
@@ -27,8 +27,8 @@ void GUI::print_header(std::string title, bool clear) {
     clear_screen();
   }
   print_border();
-  size_t rightPad = (INNER_WIDTH - title.size()) / 2;
-  size_t leftPad = INNER_WIDTH - rightPad - title.size();
+  int rightPad = (INNER_WIDTH - title.size()) / 2;
+  int leftPad = INNER_WIDTH - rightPad - title.size();
   printf("|%*s%s%*s|\n", leftPad, "", title.c_str(), rightPad, "");
   print_border();
 }
