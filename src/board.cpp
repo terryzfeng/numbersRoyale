@@ -12,6 +12,24 @@ namespace {
   static bool move_cmp(const Player* a, const Player* b) {
     return a->get_last_move() > b->get_last_move();
   }
+
+  /**
+   * @brief Sort players by a custom comparator function
+   * 
+   * @param players players vector
+   * @param cmp Player comparator function
+   * @return std::vector<const Player*> sorted players view
+   */
+  static std::vector<const Player*> sortPlayers(
+      const std::vector<std::unique_ptr<Player>>& players,
+      std::function<bool(const Player*, const Player*)> cmp) {
+    std::vector<const Player*> sorted_players_view(players.size());
+    for (const std::unique_ptr<Player>& player : players) {
+      sorted_players_view.push_back(player.get()); // Add raw pointers to the view
+    }
+    std::sort(sorted_players_view.begin(), sorted_players_view.end(), cmp);
+    return sorted_players_view;
+  }
 };
 
 Board::Board(size_t board_size) : players_(), num_humans_(0), board_size_(board_size) {}
@@ -60,16 +78,10 @@ void Board::print_scores() const {
       break;
   }
   // Sort players by descending score
-  std::vector<const Player*> sorted_player_view;
-  for (const std::unique_ptr<Player>& player : players()) {
-      sorted_player_view.push_back(player.get()); // Add raw pointers to the view
-  }
-
-  std::sort(sorted_player_view.begin(), sorted_player_view.end(), score_cmp);
-
-  for (int i = 0; i < get_num_players(); ++i) {
-    std::string player_score_text = sorted_player_view[i]->name() + ": " +
-        std::to_string(sorted_player_view[i]->get_score()) + " points";
+  std::vector<const Player*> sorted_player_view = sortPlayers(players(), score_cmp);
+  for (const Player* sorted_player : sorted_player_view) {
+    std::string player_score_text = sorted_player->name() + ": " +
+        std::to_string(sorted_player->get_score()) + " points";
     GUI::print_item(player_score_text.c_str());
   }
   GUI::print_border();
@@ -92,15 +104,11 @@ void Board::print_round_result() {
   }
 
   // Sort players by last move, descending
-  std::vector<const Player*> sorted_players_view;
-  for (const std::unique_ptr<Player>& player : players_) {
-    sorted_players_view.push_back(player.get());
-  }
-  std::sort(sorted_players_view.begin(), sorted_players_view.end(), move_cmp);
+  std::vector<const Player*> sorted_players_view = sortPlayers(players(), move_cmp);
 
-  for (int i = 0; i < get_num_players(); ++i) {
-    std::string player_move_text = sorted_players_view[i]->name() + " move: " +
-        std::to_string(sorted_players_view[i]->get_last_move());
+  for (const Player* sorted_player : sorted_players_view) {
+    std::string player_move_text = sorted_player->name() + " move: " +
+        std::to_string(sorted_player->get_last_move());
     GUI::print_item(player_move_text.c_str());
   }
 
@@ -168,11 +176,11 @@ unsigned int Board::check_round_winner() {
   unsigned int biggest_move = 0;
   bool tie = false;
 
-  for (int i = 0; i < get_num_players(); ++i) {
-    unsigned int current_move = players_[i]->get_last_move();
+  for (const std::unique_ptr<Player>& player : players_) {
+    unsigned int current_move = player->get_last_move();
     if (current_move > biggest_move) {
       biggest_move = current_move;
-      winner_id = players_[i]->id();
+      winner_id = player->id();
       tie = false;
     } else if (current_move == biggest_move) {
       tie = true;
