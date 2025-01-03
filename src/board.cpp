@@ -2,6 +2,17 @@
 #include "board.h"
 #include "cpu.h"
 
+namespace {
+  // Comparator functions
+  // Sort by descending score
+  static bool score_cmp(const Player* a, const Player* b) {
+    return a->get_score() > b->get_score();
+  }
+  // Sort by last move, descending
+  static bool move_cmp(const Player* a, const Player* b) {
+    return a->get_last_move() > b->get_last_move();
+  }
+};
 
 Board::Board(size_t board_size) : players_(), num_humans_(0), board_size_(board_size) {}
 
@@ -49,7 +60,7 @@ void Board::print_scores() const {
       break;
   }
   // Sort players by descending score
-  std::vector<Player*> sorted_player_view;
+  std::vector<const Player*> sorted_player_view;
   for (const std::unique_ptr<Player>& player : players()) {
       sorted_player_view.push_back(player.get()); // Add raw pointers to the view
   }
@@ -81,7 +92,7 @@ void Board::print_round_result() {
   }
 
   // Sort players by last move, descending
-  std::vector<Player*> sorted_players_view;
+  std::vector<const Player*> sorted_players_view;
   for (const std::unique_ptr<Player>& player : players_) {
     sorted_players_view.push_back(player.get());
   }

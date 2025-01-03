@@ -22,16 +22,6 @@ public:
   static constexpr int CONTINUE_GAME = -1;
   static constexpr int TIE_GAME = 0;
 
-  // Comparator functions
-  // Sort by descending score
-  static bool score_cmp(const Player* a, const Player* b) {
-    return a->get_score() > b->get_score();
-  }
-  // Sort by last move, descending
-  static bool move_cmp(const Player* a, const Player* b) {
-    return a->get_last_move() > b->get_last_move();
-  }
-
   /**
    * @brief Construct a new Board object
    * 
@@ -119,7 +109,7 @@ public:
   void add_player(bool is_cpu = false);
 
   /**
-   * @brief Check if game over and return winner flag option or player id
+   * @brief Check if game over and return winner option or winning player id
    * 
    * @return TIE_GAME if a tie, CONTIUE_GAME if game is not over, or winning player id
    */
