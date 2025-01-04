@@ -20,7 +20,7 @@ namespace {
    * @param cmp Player comparator function
    * @return std::vector<const Player*> sorted players view
    */
-  static std::vector<const Player*> sortPlayers(
+  static std::vector<const Player*> sort_players(
       const std::vector<std::unique_ptr<Player>>& players,
       std::function<bool(const Player*, const Player*)> cmp) {
     std::vector<const Player*> sorted_players_view(players.size());
