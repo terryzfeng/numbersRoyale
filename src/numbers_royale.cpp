@@ -15,22 +15,24 @@ namespace {
   }
 
   /**
-   * @brief Get the validated input object
+   * @brief Template function to get user input with input validation
    * 
-   * @param is_valid lambda function to validate input
-   * @return int selected input after validation
+   * @param is_valid lambda function to validate user input
+   * @return selected user input option of type T after validation
    */
-  int get_validated_input(const std::function<bool(int)>& is_valid) {
+  template <typename T>
+  T get_validated_input(const std::function<bool(T)>& is_valid) {
     int input;
     while (true) {
       std::cin >> input;
-      if (std::cin.fail() || !is_valid(input)) {
+      T option = static_cast<T>(input);
+      if (std::cin.fail() || !is_valid(option)) {
         std::cin.clear(); // clear the error flag
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard invalid input
         std::cout << "Invalid input. Please try again: ";
       } else {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard any extra input
-        return input;
+        return option;
       }
     }
   }
@@ -50,10 +52,12 @@ void NumbersRoyale::main_menu() {
     GUI::print_item("3. Quit");
     GUI::print_border();
     printf("Select option: ");
-    MainMenuOption option = static_cast<MainMenuOption>(get_validated_input([](int input) { 
-      MainMenuOption option = static_cast<MainMenuOption>(input);
-      return option >= MainMenuOption::PLAY_GAME && option <= MainMenuOption::QUIT; 
-    }));
+
+    const std::function<bool(MainMenuOption)> valid_menu_option = 
+        [](MainMenuOption option) -> bool {
+          return option >= MainMenuOption::PLAY_GAME && option <= MainMenuOption::QUIT; 
+        };
+    MainMenuOption option = get_validated_input(valid_menu_option);
 
     switch (option) {
       case MainMenuOption::PLAY_GAME:
@@ -102,11 +106,12 @@ void NumbersRoyale::play_mode() {
   GUI::print_border();
   printf("Select option: ");
 
-  PlayModeOption option = static_cast<PlayModeOption>(get_validated_input([](int input) { 
-    PlayModeOption option = static_cast<PlayModeOption>(input);
-    return option >= PlayModeOption::PLAYER_VS_PLAYER && 
-        option <= PlayModeOption::RETURN_TO_MAIN_MENU;
-  }));
+  const std::function<bool(PlayModeOption)> valid_play_option = 
+      [](PlayModeOption option) -> bool {
+        return option >= PlayModeOption::PLAYER_VS_PLAYER && 
+            option <= PlayModeOption::RETURN_TO_MAIN_MENU;
+      };
+  PlayModeOption option = get_validated_input(valid_play_option);
 
   // P1
   board_.add_player(false);
@@ -136,11 +141,13 @@ void NumbersRoyale::select_board_size() {
   GUI::print_item("4. Return to Main Menu");
   GUI::print_border();
   printf("Select option: ");
-  BoardSizeOption option = static_cast<BoardSizeOption>(get_validated_input([](int input) { 
-    BoardSizeOption option = static_cast<BoardSizeOption>(input);
-    return option >= BoardSizeOption::SMALL && 
-        option <= BoardSizeOption::RETURN_TO_MAIN_MENU;
-  }));
+
+  const std::function<bool(BoardSizeOption)> valid_board_option = 
+      [](BoardSizeOption option) -> bool {
+        return option >= BoardSizeOption::SMALL && 
+            option <= BoardSizeOption::RETURN_TO_MAIN_MENU;
+      };
+  BoardSizeOption option = get_validated_input(valid_board_option);
 
   if (option != BoardSizeOption::RETURN_TO_MAIN_MENU) {
     board_.init(board_option_to_size(static_cast<unsigned int>(option)));
@@ -175,9 +182,11 @@ void NumbersRoyale::play_game() {
 #endif
         printf("%s, select a number: ", player->name().c_str());
 
-        int player_move = get_validated_input([&player](int input) { 
-          return player->is_valid_move(input); 
-        });
+        const std::function<bool(int)> valid_move_option = 
+            [&player](int option) -> bool {
+              return player->is_valid_move(option);
+            };
+        int player_move = get_validated_input(valid_move_option);
         player->move(player_move);
       }
     }
