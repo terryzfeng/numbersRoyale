@@ -78,7 +78,7 @@ void Board::print_scores() const {
       break;
   }
   // Sort players by descending score
-  std::vector<const Player*> sorted_player_view = sortPlayers(players(), score_cmp);
+  std::vector<const Player*> sorted_player_view = sort_players(players(), score_cmp);
   for (const Player* sorted_player : sorted_player_view) {
     std::string player_score_text = sorted_player->name() + ": " +
         std::to_string(sorted_player->get_score()) + " points";
@@ -104,7 +104,7 @@ void Board::print_round_result() {
   }
 
   // Sort players by last move, descending
-  std::vector<const Player*> sorted_players_view = sortPlayers(players(), move_cmp);
+  std::vector<const Player*> sorted_players_view = sort_players(players(), move_cmp);
 
   for (const Player* sorted_player : sorted_players_view) {
     std::string player_move_text = sorted_player->name() + " move: " +
