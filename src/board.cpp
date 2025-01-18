@@ -23,7 +23,8 @@ namespace {
   static std::vector<const Player*> sort_players(
       const std::vector<std::unique_ptr<Player>>& players,
       std::function<bool(const Player*, const Player*)> cmp) {
-    std::vector<const Player*> sorted_players_view(players.size());
+    std::vector<const Player*> sorted_players_view;
+    sorted_players_view.reserve(players.size());
     for (const std::unique_ptr<Player>& player : players) {
       sorted_players_view.push_back(player.get()); // Add raw pointers to the view
     }
